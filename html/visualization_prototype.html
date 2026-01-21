@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>城市功能区动态分析平台 - 可视化原型</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Leaflet Extra CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.css" />
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 20px;
+            gap: 20px;
+        }
+        
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 24px;
+        }
+        
+        .header .tagline {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .header .author {
+            color: #3498db;
+            font-weight: bold;
+        }
+        
+        .content {
+            display: flex;
+            flex: 1;
+            gap: 20px;
+        }
+        
+        .left-panel {
+            flex: 3;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .map-container {
+            flex: 3;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .controls h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+        
+        .control-group {
+            margin-bottom: 15px;
+        }
+        
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #34495e;
+            font-weight: 500;
+        }
+        
+        select, input, button {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #2980b9;
+        }
+        
+        .stats-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            flex: 1;
+        }
+        
+        .stats-panel h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+        
+        .stat-item {
+            margin-bottom: 12px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .legend-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            flex: 1;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        
+        .legend-label {
+            font-size: 14px;
+            color: #34495e;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 15px;
+            color: #7f8c8d;
+            font-size: 12px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .close-btn {
+            float: right;
+            cursor: pointer;
+            font-size: 24px;
+            color: #7f8c8d;
+        }
+        
+        @media (max-width: 1024px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .left-panel, .right-panel {
+                flex: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <div>
+                <h1>🏙️ 城市功能区动态分析平台</h1>
+                <div class="tagline">基于多源数据融合的城市功能区识别与可视化系统 | 作者: <span class="author">张笔弈</span></div>
+            </div>
+            <button onclick="showProjectInfo()">项目信息</button>
+        </div>
+        
+        <!-- 内容区域 -->
+        <div class="content">
+            <!-- 左侧：地图和控制面板 -->
+            <div class="left-panel">
+                <!-- 地图容器 -->
+                <div class="map-container">
+                    <div id="map"></div>
+                </div>
+                
+                <!-- 控制面板 -->
+                <div class="controls">
+                    <h3>📊 分析控制</h3>
+                    
+                    <div class="control-group">
+                        <label for="layer-select">选择可视化图层:</label>
+                        <select id="layer-select" onchange="changeLayer()">
+                            <option value="zones">功能区分布</option>
+                            <option value="poi-density">POI密度热力图</option>
+                            <option value="ndvi">植被指数(NDVI)</option>
+                            <option value="roads">路网分布</option>
+                            <option value="vitality">城市活力指数</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="year-select">时间范围:</label>
+                        <select id="year-select">
+                            <option value="2023">2023年</option>
+                            <option value="2022">2022年</option>
+                            <option value="2021">2021年</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="zone-filter">功能区类型筛选:</label>
+                        <select id="zone-filter" multiple onchange="filterZones()">
+                            <option value="commercial" selected>商业区</option>
+                            <option value="residential" selected>居住区</option>
+                            <option value="office" selected>办公区</option>
+                            <option value="education" selected>文教区</option>
+                            <option value="green" selected>绿地/公园</option>
+                            <option value="medical" selected>医疗区</option>
+                            <option value="mixed" selected>混合功能区</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>分析操作:</label>
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="analyzeChanges()">🔍 变化检测</button>
+                            <button onclick="predictTrend()">📈 趋势预测</button>
+                            <button onclick="exportData()">📥 导出数据</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右侧：统计和图层 -->
+            <div class="right-panel">
+                <!-- 统计面板 -->
+                <div class="stats-panel">
+                    <h3>📈 区域统计</h3>
+                    <div id="stats-content">
+                        <div class="stat-item">
+                            <div class="stat-label">分析区域</div>
+                            <div class="stat-value">广州天河区</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">网格总数</div>
+                            <div class="stat-value" id="total-grids">18</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">POI总数</div>
+                            <div class="stat-value" id="total-poi">256</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">平均NDVI</div>
+                            <div class="stat-value" id="avg-ndvi">0.35</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">路网密度</div>
+                            <div class="stat-value" id="road-density">0.012 km/km²</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">城市活力指数</div>
+                            <div class="stat-value" id="vitality-index">0.62</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 图例面板 -->
+                <div class="legend-panel">
+                    <h3>🎨 功能区图例</h3>
+                    <div id="legend-content">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #FF6B6B;"></div>
+                            <div class="legend-label">商业区</div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #4ECDC4;"></div>
+                            <div class="legend-label">居住区</div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #45B7D1;"></div>
+                            <div class="legend-label">办公区</div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #96CEB4;"></div>
+                            <div class="legend-label">文教区</div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #FFEAA7;"></div>
+                            <div class="legend-label">绿地/公园</div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #DDA0DD;"></div>
+                            <div class="legend-label">医疗区</div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #98D8C8;"></div>
+                            <div class="legend-label">混合功能区</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部 -->
+        <div class="footer">
+            <p>城市功能区动态分析平台 | 技术支持: GIS + 遥感 + 大数据 + AI | 版本: 1.0.0 | © 2026 张笔弈</p>
+            <p>本系统为Demo版本，数据为模拟数据，仅用于技术演示</p>
+        </div>
+    </div>
+    
+    <!-- 项目信息模态框 -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">×</span>
+            <h3>📋 项目信息</h3>
+            <div style="line-height: 1.6;">
+                <p><strong>项目名称:</strong> 基于多源数据融合的城市功能区动态分析与可视化平台</p>
+                <p><strong>项目目标:</strong> 构建一个集成GIS、遥感、POI、交通流等多源数据的动态分析平台，实现功能区智能识别、变化监测与可视化展示。</p>
+                
+                <h4 style="margin-top: 20px; margin-bottom: 10px;">🎯 核心功能</h4>
+                <ul style="margin-left: 20px; margin-bottom: 15px;">
+                    <li>多源数据融合与处理</li>
+                    <li>功能区智能识别与分类</li>
+                    <li>时序变化检测与分析</li>
+                    <li>交互式可视化展示</li>
+                    <li>趋势预测与发展建议</li>
+                </ul>
+                
+                <h4 style="margin-top: 20px; margin-bottom: 10px;">🛠️ 技术栈</h4>
+                <ul style="margin-left: 20px; margin-bottom: 15px;">
+                    <li><strong>后端:</strong> Python, GeoPandas, Scikit-learn</li>
+                    <li><strong>前端:</strong> JavaScript, Leaflet, HTML/CSS</li>
+                    <li><strong>数据:</strong> GIS, 遥感影像, POI, 路网数据</li>
+                    <li><strong>可视化:</strong> Folium, Plotly, Tableau</li>
+                </ul>
+                
+                <h4 style="margin-top: 20px; margin-bottom: 10px;">📊 应用价值</h4>
+                <ul style="margin-left: 20px;">
+                    <li>为城市规划提供数据支持</li>
+                    <li>辅助商业选址与投资决策</li>
+                    <li>支持城市管理与智慧城市建设</li>
+                    <li>促进跨学科研究与实践</li>
+                </ul>
+                
+                <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                    <p><strong>作者:</strong> 张笔弈 | 仲恺农业工程学院 土地科学与技术(GIS方向)</p>
+                    <p><strong>联系方式:</strong> 3792458256@qq.com | 电话: 13670473813</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.fullscreen/Control.FullScreen.js"></script>
+    
+    <script>
+        // 初始化地图
+        let map = L.map('map').setView([23.132, 113.332], 13);
+        
+        // 添加底图
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+        
+        // 添加全屏控件
+        L.control.fullscreen().addTo(map);
+        
+        // 模拟功能区数据
+        const functionZones = [
+            {
+                id: "G_001_001",
+                type: "commercial",
+                name: "商业区",
+                lat: 23.132,
+                lng: 113.332,
+                poi_count: 25,
+                ndvi: 0.18,
+                road_density: 0.018,
+                vitality: 0.85
+            },
+            {
+                id: "G_001_002",
+                type: "residential",
+                name: "居住区",
+                lat: 23.134,
+                lng: 113.334,
+                poi_count: 12,
+                ndvi: 0.35,
+                road_density: 0.010,
+                vitality: 0.52
+            },
+            {
+                id: "G_001_003",
+                type: "office",
+                name: "办公区",
+                lat: 23.130,
+                lng: 113.330,
+                poi_count: 18,
+                ndvi: 0.22,
+                road_density: 0.015,
+                vitality: 0.68
+            },
+            {
+                id: "G_001_004",
+                type: "education",
+                name: "文教区",
+                lat: 23.128,
+                lng: 113.328,
+                poi_count: 8,
+                ndvi: 0.45,
+                road_density: 0.008,
+                vitality: 0.42
+            },
+            {
+                id: "G_001_005",
+                type: "green",
+                name: "绿地/公园",
+                lat: 23.126,
+                lng: 113.326,
+                poi_count: 3,
+                ndvi: 0.70,
+                road_density: 0.004,
+                vitality: 0.25
+            },
+            {
+                id: "G_001_006",
+                type: "medical",
+                name: "医疗区",
+                lat: 23.124,
+                lng: 113.324,
+                poi_count: 10,
+                ndvi: 0.40,
+                road_density: 0.009,
+                vitality: 0.48
+            },
+            {
+                id: "G_001_007",
+                type: "mixed",
+                name: "混合功能区",
+                lat: 23.122,
+                lng: 113.322,
+                poi_count: 15,
+                ndvi: 0.30,
+                road_density: 0.012,
+                vitality: 0.58
+            }
+        ];
+        
+        // POI数据
+        const poiData = [
+            {lat: 23.132, lng: 113.332, type: "购物", name: "天河城"},
+            {lat: 23.133, lng: 113.333, type: "购物", name: "正佳广场"},
+            {lat: 23.131, lng: 113.331, type: "餐饮", name: "海底捞"},
+            {lat: 23.130, lng: 113.330, type: "办公", name: "中信广场"},
+            {lat: 23.129, lng: 113.329, type: "教育", name: "中山大学"},
+            {lat: 23.128, lng: 113.328, type: "医疗", name: "省人民医院"},
+            {lat: 23.127, lng: 113.327, type: "交通", name: "广州东站"}
+        ];
+        
+        // 颜色映射
+        const zoneColors = {
+            commercial: "#FF6B6B",
+            residential: "#4ECDC4",
+            office: "#45B7D1",
+            education: "#96CEB4",
+            green: "#FFEAA7",
+            medical: "#DDA0DD",
+            mixed: "#98D8C8"
+        };
+        
+        // 图层组
+        let zonesLayer = L.layerGroup();
+        let poiLayer = L.layerGroup();
+        let heatmapLayer = L.layerGroup();
+        let roadsLayer = L.layerGroup();
+        
+        // 初始化功能区图层
+        function initZonesLayer() {
+            zonesLayer.clearLayers();
+            
+            const selectedZones = Array.from(document.getElementById('zone-filter').selectedOptions)
+                .map(option => option.value);
+            
+            functionZones.forEach(zone => {
+                if (selectedZones.includes(zone.type)) {
+                    const marker = L.circleMarker([zone.lat, zone.lng], {
+                        radius: 15,
+                        fillColor: zoneColors[zone.type],
+                        color: "#000",
+                        weight: 1,
+                        opacity: 1,
+                        fillOpacity: 0.7
+                    });
+                    
+                    marker.bindPopup(`
+                        <div style="font-family: 'Microsoft YaHei', sans-serif; min-width: 200px;">
+                            <h3 style="margin: 0 0 10px 0; color: #2c3e50;">${zone.name}</h3>
+                            <p><strong>网格ID:</strong> ${zone.id}</p>
+                            <p><strong>POI数量:</strong> ${zone.poi_count}</p>
+                            <p><strong>植被指数:</strong> ${zone.ndvi.toFixed(2)}</p>
+                            <p><strong>路网密度:</strong> ${zone.road_density.toFixed(3)}</p>
+                            <p><strong>城市活力:</strong> ${zone.vitality.toFixed(2)}</p>
+                            <button onclick="analyzeZone('${zone.id}')" style="margin-top: 10px; padding: 5px 10px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">详细分析</button>
+                        </div>
+                    `);
+                    
+                    zonesLayer.addLayer(marker);
+                }
+            });
+            
+            zonesLayer.addTo(map);
+        }
+        
+        // 初始化POI图层
+        function initPoiLayer() {
+            poiLayer.clearLayers();
+            
+            poiData.forEach(poi => {
+                const marker = L.circleMarker([poi.lat, poi.lng], {
+                    radius: 6,
+                    fillColor: "#3498db",
+                    color: "#fff",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                });
+                
+                marker.bindPopup(`
+                    <div style="font-family: 'Microsoft YaHei', sans-serif;">
+                        <h4 style="margin: 0 0 5px 0;">${poi.name}</h4>
+                        <p><strong>类型:</strong> ${poi.type}</p>
+                        <p><strong>位置:</strong> ${poi.lat.toFixed(4)}, ${poi.lng.toFixed(4)}</p>
+                    </div>
+                `);
+                
+                poiLayer.addLayer(marker);
+            });
+        }
+        
+        // 创建热力图数据
+        function createHeatmapData() {
+            const heatData = [];
+            functionZones.forEach(zone => {
+                // 根据POI数量生成热力图强度
+                const intensity = zone.poi_count / 25;
+                for (let i = 0; i < 3; i++) {
+                    // 添加一些随机点以创建热力图效果
+                    const lat = zone.lat + (Math.random() - 0.5) * 0.005;
+                    const lng = zone.lng + (Math.random() - 0.5) * 0.005;
+                    heatData.push([lat, lng, intensity]);
+                }
+            });
+            return heatData;
+        }
+        
+        // 初始化热力图
+        function initHeatmap() {
+            heatmapLayer.clearLayers();
+            
+            // 创建热力图
+            const heatData = createHeatmapData();
+            
+            // 创建热力图（使用圆形模拟）
+            heatData.forEach(point => {
+                L.circleMarker([point[0], point[1]], {
+                    radius: 10,
+                    fillColor: "#ff7800",
+                    color: "transparent",
+                    fillOpacity: point[2] * 0.5
+                }).addTo(heatmapLayer);
+            });
+        }
+        
+        // 初始化路网
+        function initRoads() {
+            roadsLayer.clearLayers();
+            
+            // 模拟路网数据
+            const roads = [
+                {
+                    name: "天河路",
+                    coordinates: [[23.132, 113.325], [23.132, 113.335]]
+                },
+                {
+                    name: "体育西路",
+                    coordinates: [[23.125, 113.328], [23.135, 113.328]]
+                },
+                {
+                    name: "中山大道",
+                    coordinates: [[23.125, 113.310], [23.125, 113.330]]
+                },
+                {
+                    name: "天河北路",
+                    coordinates: [[23.140, 113.315], [23.140, 113.330]]
+                }
+            ];
+            
+            roads.forEach(road => {
+                const polyline = L.polyline(road.coordinates, {
+                    color: "#34495e",
+                    weight: 3,
+                    opacity: 0.7
+                });
+                
+                polyline.bindPopup(`<b>${road.name}</b><br>主要交通干道`);
+                roadsLayer.addLayer(polyline);
+            });
+        }
+        
+        // 切换图层
+        function changeLayer() {
+            const layerType = document.getElementById('layer-select').value;
+            
+            // 移除所有图层
+            zonesLayer.remove();
+            poiLayer.remove();
+            heatmapLayer.remove();
+            roadsLayer.remove();
+            
+            // 根据选择添加图层
+            switch(layerType) {
+                case 'zones':
+                    initZonesLayer();
+                    break;
+                case 'poi-density':
+                    initHeatmap();
+                    heatmapLayer.addTo(map);
+                    break;
+                case 'ndvi':
+                    // 模拟NDVI图层
+                    initZonesLayer();
+                    // 这里可以添加NDVI特定的样式
+                    break;
+                case 'roads':
+                    initRoads();
+                    roadsLayer.addTo(map);
+                    break;
+                case 'vitality':
+                    initZonesLayer();
+                    // 这里可以添加城市活力特定的样式
+                    break;
+            }
+        }
+        
+        // 筛选功能区
+        function filterZones() {
+            changeLayer();
+            updateStats();
+        }
+        
+        // 更新统计信息
+        function updateStats() {
+            const selectedZones = Array.from(document.getElementById('zone-filter').selectedOptions)
+                .map(option => option.value);
+            
+            const filteredZones = functionZones.filter(zone => selectedZones.includes(zone.type));
+            
+            if (filteredZones.length > 0) {
+                const totalPoi = filteredZones.reduce((sum, zone) => sum + zone.poi_count, 0);
+                const avgNdvi = filteredZones.reduce((sum, zone) => sum + zone.ndvi, 0) / filteredZones.length;
+                const avgRoadDensity = filteredZones.reduce((sum, zone) => sum + zone.road_density, 0) / filteredZones.length;
+                const avgVitality = filteredZones.reduce((sum, zone) => sum + zone.vitality, 0) / filteredZones.length;
+                
+                document.getElementById('total-grids').textContent = filteredZones.length;
+                document.getElementById('total-poi').textContent = totalPoi;
+                document.getElementById('avg-ndvi').textContent = avgNdvi.toFixed(2);
+                document.getElementById('road-density').textContent = avgRoadDensity.toFixed(3) + " km/km²";
+                document.getElementById('vitality-index').textContent = avgVitality.toFixed(2);
+            }
+        }
+        
+        // 分析功能区变化
+        function analyzeChanges() {
+            alert("📊 变化检测分析\n\n正在分析2022-2023年的功能区变化...\n\n主要发现：\n1. 商业区扩展了15%\n2. 新增办公区网格3个\n3. 绿地面积减少8%\n\n详细报告已生成，可在输出目录查看。");
+            
+            // 模拟变化检测结果
+            const changeResults = [
+                {zone: "商业区", change: "+15%", trend: "扩张"},
+                {zone: "办公区", change: "+10%", trend: "增长"},
+                {zone: "绿地/公园", change: "-8%", trend: "减少"},
+                {zone: "居住区", change: "+5%", trend: "稳定"}
+            ];
+            
+            // 显示变化结果
+            let resultHtml = "<h4>🏙️ 功能区变化检测结果</h4><table style='width:100%; border-collapse: collapse; margin-top:10px;'>";
+            resultHtml += "<tr style='background:#f8f9fa;'><th style='padding:8px; text-align:left;'>功能区</th><th style='padding:8px; text-align:left;'>变化率</th><th style='padding:8px; text-align:left;'>趋势</th></tr>";
+            
+            changeResults.forEach(result => {
+                const color = result.change.startsWith("+") ? "#27ae60" : "#e74c3c";
+                resultHtml += `<tr><td style='padding:8px; border-bottom:1px solid #eee;'>${result.zone}</td>`;
+                resultHtml += `<td style='padding:8px; border-bottom:1px solid #eee; color:${color};'>${result.change}</td>`;
+                resultHtml += `<td style='padding:8px; border-bottom:1px solid #eee;'>${result.trend}</td></tr>`;
+            });
+            
+            resultHtml += "</table>";
+            
+            // 创建结果窗口
+            const resultWindow = window.open("", "分析结果", "width=600,height=400");
+            resultWindow.document.write(`
+                <html>
+                <head>
+                    <title>变化检测结果</title>
+                    <style>
+                        body { font-family: 'Microsoft YaHei', sans-serif; padding: 20px; }
+                        h3 { color: #2c3e50; }
+                        .summary { background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0; }
+                    </style>
+                </head>
+                <body>
+                    <h3>🏙️ 城市功能区变化检测报告</h3>
+                    <div class="summary">
+                        <p><strong>分析时间:</strong> 2022年 - 2023年</p>
+                        <p><strong>分析区域:</strong> 广州天河区</p>
+                        <p><strong>主要结论:</strong> 城市功能区呈现明显的商业化和办公化趋势，绿地面积有所减少。</p>
+                    </div>
+                    ${resultHtml}
+                    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
+                        <button onclick="window.print()" style="padding: 8px 15px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">打印报告</button>
+                        <button onclick="window.close()" style="padding: 8px 15px; background: #95a5a6; color: white; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px;">关闭</button>
+                    </div>
+                </body>
+                </html>
+            `);
+        }
+        
+        // 趋势预测
+        function predictTrend() {
+            alert("📈 趋势预测分析\n\n正在基于历史数据预测未来发展趋势...\n\n预测结果：\n1. 未来3年商业区将继续扩张20%\n2. 办公需求增长预期15%\n3. 建议加强绿地保护与建设\n\n详细预测报告已生成。");
+        }
+        
+        // 导出数据
+        function exportData() {
+            alert("📥 数据导出\n\n正在导出当前分析数据...\n\n已生成以下文件：\n1. function_zones_2023.geojson\n2. analysis_report_2023.pdf\n3. statistics_data.csv\n\n文件已保存到 outputs/ 目录。");
+        }
+        
+        // 分析单个功能区
+        function analyzeZone(zoneId) {
+            const zone = functionZones.find(z => z.id === zoneId);
+            if (zone) {
+                alert(`🔍 详细分析: ${zone.name}\n\n网格ID: ${zone.id}\nPOI密度: ${zone.poi_count}/km²\n植被指数: ${zone.ndvi}\n路网密度: ${zone.road_density}\n城市活力: ${zone.vitality}\n\n发展建议: ${getZoneRecommendation(zone.type)}`);
+            }
+        }
+        
+        // 获取功能区建议
+        function getZoneRecommendation(zoneType) {
+            const recommendations = {
+                commercial: "建议加强商业设施配套，提升商业活力",
+                residential: "建议完善生活服务设施，提升居住品质",
+                office: "建议优化办公环境，增加配套设施",
+                education: "建议优化教育资源配置，提升文化氛围",
+                green: "建议加强生态保护，提升绿地质量",
+                medical: "建议完善医疗设施，提升服务质量",
+                mixed: "建议优化功能布局，提升综合效益"
+            };
+            return recommendations[zoneType] || "建议加强规划管理";
+        }
+        
+        // 显示项目信息模态框
+        function showProjectInfo() {
+            document.getElementById('projectModal').style.display = 'flex';
+        }
+        
+        // 关闭模态框
+        function closeModal() {
+            document.getElementById('projectModal').style.display = 'none';
+        }
+        
+        // 点击模态框外部关闭
+        window.onclick = function(event) {
+            const modal = document.getElementById('projectModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化图层
+            initZonesLayer();
+            initPoiLayer();
+            initHeatmap();
+            initRoads();
+            
+            // 默认显示功能区图层
+            zonesLayer.addTo(map);
+            
+            // 更新统计信息
+            updateStats();
+            
+            // 添加一些模拟的POI标记
+            poiData.forEach(poi => {
+                L.circleMarker([poi.lat, poi.lng], {
+                    radius: 4,
+                    fillColor: "#3498db",
+                    color: "#fff",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                }).addTo(map).bindPopup(`<b>${poi.name}</b><br>${poi.type}`);
+            });
+            
+            // 添加模拟的道路
+            const road = L.polyline([
+                [23.132, 113.325],
+                [23.132, 113.332],
+                [23.132, 113.338]
+            ], {
+                color: '#34495e',
+                weight: 3,
+                opacity: 0.7
+            }).addTo(map).bindPopup("<b>天河路</b><br>主要商业街道");
+            
+            console.log("🚀 城市功能区分析平台已启动！");
+            console.log("作者: 张笔弈 | 联系方式: 3792458256@qq.com");
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {
+          "osmid": "R000001",
+          "highway": "tertiary",
+          "name": "天河路",
+          "length": 1250.5
+        },
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [113.320, 23.130],
+            [113.325, 23.131],
+            [113.330, 23.132],
+            [113.335, 23.133]
+          ]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "osmid": "R000002",
+          "highway": "secondary",
+          "name": "体育西路",
+          "length": 980.3
+        },
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [113.328, 23.125],
+            [113.328, 23.130],
+            [113.328, 23.135],
+            [113.328, 23.140]
+          ]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "osmid": "R000003",
+          "highway": "primary",
+          "name": "中山大道",
+          "length": 2100.8
+        },
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [113.310, 23.125],
+            [113.315, 23.125],
+            [113.320, 23.125],
+            [113.325, 23.125],
+            [113.330, 23.125]
+          ]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "osmid": "R000004",
+          "highway": "tertiary",
+          "name": "天河北路",
+          "length": 1350.2
+        },
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [113.315, 23.140],
+            [113.320, 23.140],
+            [113.325, 23.140],
+            [113.330, 23.140]
+          ]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "osmid": "R000005",
+          "highway": "residential",
+          "name": "龙口西路",
+          "length": 650.7
+        },
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [113.335, 23.128],
+            [113.335, 23.132],
+            [113.335, 23.136]
+          ]
+        }
+      }
+    ]
+  }

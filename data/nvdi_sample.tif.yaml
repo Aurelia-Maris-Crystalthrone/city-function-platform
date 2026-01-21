@@ -1,0 +1,52 @@
+# NDVI栅格数据信息
+ndvi_sample_info:
+  file_path: "data/raw/satellite/ndvi_sample.tif"
+  description: "广州市2023年NDVI指数示例数据"
+  resolution: "10米"
+  coverage: "广州市天河区部分区域"
+  data_range: "-0.2 到 0.8"
+  coordinate_system: "WGS84 (EPSG:4326)"
+  size: "1000x1000像素"
+  
+# 生成Python代码创建模拟NDVI数据
+generate_ndvi_code: |
+  import numpy as np
+  import rasterio
+  from rasterio.transform import from_origin
+  
+  # 创建模拟NDVI数据
+  rows, cols = 100, 100
+  ndvi = np.zeros((rows, cols))
+  
+  # 创建坐标网格
+  x = np.linspace(0, 1, cols)
+  y = np.linspace(0, 1, rows)
+  X, Y = np.meshgrid(x, y)
+  
+  # 模拟植被分布：中心城区低，周边高
+  center_x, center_y = 0.5, 0.5
+  distance = np.sqrt((X - center_x)**2 + (Y - center_y)**2)
+  
+  # 植被指数随距离递减
+  ndvi = 0.7 * np.exp(-distance * 3)
+  
+  # 添加随机变化
+  ndvi += np.random.normal(0, 0.1, (rows, cols))
+  
+  # 限制范围
+  ndvi = np.clip(ndvi, -0.2, 0.8)
+  
+  # 保存为TIFF
+  transform = from_origin(113.30, 23.18, 0.001, 0.001)
+  profile = {
+      'driver': 'GTiff',
+      'height': rows,
+      'width': cols,
+      'count': 1,
+      'dtype': 'float32',
+      'crs': 'EPSG:4326',
+      'transform': transform
+  }
+  
+  with rasterio.open('ndvi_sample.tif', 'w', **profile) as dst:
+      dst.write(ndvi.astype(np.float32), 1)

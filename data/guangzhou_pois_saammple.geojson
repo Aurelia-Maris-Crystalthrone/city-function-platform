@@ -1,0 +1,155 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {
+          "id": "B000001",
+          "name": "天河城购物中心",
+          "type": "购物",
+          "type_code": "060000",
+          "address": "天河路208号",
+          "category": "购物"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [113.332, 23.132]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "id": "B000002",
+          "name": "正佳广场",
+          "type": "购物",
+          "type_code": "060000",
+          "address": "天河路228号",
+          "category": "购物"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [113.333, 23.133]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "id": "B000003",
+          "name": "广州塔",
+          "type": "风景名胜",
+          "type_code": "110000",
+          "address": "阅江西路222号",
+          "category": "旅游"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [113.325, 23.106]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "id": "B000004",
+          "name": "中山大学",
+          "type": "高等院校",
+          "type_code": "141200",
+          "address": "新港西路135号",
+          "category": "教育"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [113.298, 23.098]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "id": "B000005",
+          "name": "广东省人民医院",
+          "type": "综合医院",
+          "type_code": "090100",
+          "address": "中山二路106号",
+          "category": "医疗"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [113.291, 23.124]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "id": "B000006",
+          "name": "陶陶居",
+          "type": "中餐厅",
+          "type_code": "050100",
+          "address": "第十甫路20号",
+          "category": "餐饮"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [113.254, 23.116]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "id": "B000007",
+          "name": "广州东站",
+          "type": "火车站",
+          "type_code": "150200",
+          "address": "林和中路",
+          "category": "交通"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [113.324, 23.151]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "id": "B000008",
+          "name": "中信广场",
+          "type": "商务写字楼",
+          "type_code": "120000",
+          "address": "天河北路233号",
+          "category": "办公"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [113.323, 23.142]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "id": "B000009",
+          "name": "广州图书馆",
+          "type": "图书馆",
+          "type_code": "140300",
+          "address": "珠江东路4号",
+          "category": "文化"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [113.327, 23.121]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "id": "B000010",
+          "name": "天河体育中心",
+          "type": "体育场馆",
+          "type_code": "080100",
+          "address": "体育西路",
+          "category": "体育"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [113.328, 23.136]
+        }
+      }
+    ]
+  }

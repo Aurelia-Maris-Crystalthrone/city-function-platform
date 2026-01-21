@@ -1,0 +1,173 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {
+          "grid_id": "G_001_001",
+          "zone_type": "商业区",
+          "poi_count": 15,
+          "poi_diversity": 1.8,
+          "ndvi_mean": 0.25,
+          "road_density": 0.012,
+          "urban_vitality": 0.72,
+          "development_potential": 0.65
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[
+            [113.305, 23.115], [113.310, 23.115],
+            [113.310, 23.120], [113.305, 23.120],
+            [113.305, 23.115]
+          ]]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "grid_id": "G_001_002",
+          "zone_type": "居住区",
+          "poi_count": 8,
+          "poi_diversity": 1.2,
+          "ndvi_mean": 0.35,
+          "road_density": 0.008,
+          "urban_vitality": 0.45,
+          "development_potential": 0.38
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[
+            [113.310, 23.115], [113.315, 23.115],
+            [113.315, 23.120], [113.310, 23.120],
+            [113.310, 23.115]
+          ]]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "grid_id": "G_001_003",
+          "zone_type": "商业区",
+          "poi_count": 25,
+          "poi_diversity": 2.1,
+          "ndvi_mean": 0.18,
+          "road_density": 0.018,
+          "urban_vitality": 0.85,
+          "development_potential": 0.72
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[
+            [113.315, 23.115], [113.320, 23.115],
+            [113.320, 23.120], [113.315, 23.120],
+            [113.315, 23.115]
+          ]]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "grid_id": "G_001_004",
+          "zone_type": "混合功能区",
+          "poi_count": 12,
+          "poi_diversity": 1.5,
+          "ndvi_mean": 0.30,
+          "road_density": 0.010,
+          "urban_vitality": 0.58,
+          "development_potential": 0.52
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[
+            [113.320, 23.115], [113.325, 23.115],
+            [113.325, 23.120], [113.320, 23.120],
+            [113.320, 23.115]
+          ]]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "grid_id": "G_001_005",
+          "zone_type": "办公区",
+          "poi_count": 18,
+          "poi_diversity": 1.9,
+          "ndvi_mean": 0.22,
+          "road_density": 0.015,
+          "urban_vitality": 0.68,
+          "development_potential": 0.61
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[
+            [113.325, 23.115], [113.330, 23.115],
+            [113.330, 23.120], [113.325, 23.120],
+            [113.325, 23.115]
+          ]]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "grid_id": "G_002_001",
+          "zone_type": "文教区",
+          "poi_count": 5,
+          "poi_diversity": 0.8,
+          "ndvi_mean": 0.65,
+          "road_density": 0.005,
+          "urban_vitality": 0.32,
+          "development_potential": 0.28
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[
+            [113.305, 23.120], [113.310, 23.120],
+            [113.310, 23.125], [113.305, 23.125],
+            [113.305, 23.120]
+          ]]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "grid_id": "G_002_002",
+          "zone_type": "绿地/公园",
+          "poi_count": 3,
+          "poi_diversity": 0.6,
+          "ndvi_mean": 0.70,
+          "road_density": 0.004,
+          "urban_vitality": 0.25,
+          "development_potential": 0.18
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[
+            [113.310, 23.120], [113.315, 23.120],
+            [113.315, 23.125], [113.310, 23.125],
+            [113.310, 23.120]
+          ]]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "grid_id": "G_002_003",
+          "zone_type": "医疗区",
+          "poi_count": 10,
+          "poi_diversity": 1.3,
+          "ndvi_mean": 0.40,
+          "road_density": 0.009,
+          "urban_vitality": 0.48,
+          "development_potential": 0.42
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[
+            [113.315, 23.120], [113.320, 23.120],
+            [113.320, 23.125], [113.315, 23.125],
+            [113.315, 23.120]
+          ]]
+        }
+      }
+    ]
+  }
