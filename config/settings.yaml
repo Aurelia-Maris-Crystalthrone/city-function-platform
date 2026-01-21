@@ -1,0 +1,56 @@
+# 项目配置
+project:
+  name: "城市功能区动态分析平台"
+  version: "1.0.0"
+  author: "张笔弈"
+
+# 区域配置
+region:
+  name: "广州天河区"
+  bounds:
+    min_lon: 113.30
+    max_lon: 113.40
+    min_lat: 23.10
+    max_lat: 23.18
+
+# POI配置
+poi:
+  categories: [
+    "050000",  # 餐饮
+    "060000",  # 购物
+    "150000",  # 交通
+    "140000",  # 教育
+    "090000",  # 医疗
+    "120000"   # 办公
+  ]
+  type_mapping:
+    "050000": "餐饮"
+    "060000": "购物"
+    "150000": "交通"
+    "140000": "教育"
+    "090000": "医疗"
+    "120000": "办公"
+
+# 特征工程配置
+features:
+  grid_size: 500  # 网格大小(米)
+  temporal_window: 7  # 时间窗口(天)
+  
+# 模型配置
+model:
+  clustering:
+    algorithm: "kmeans"  # kmeans或dbscan
+    n_clusters: 6
+    
+# 可视化配置
+visualization:
+  base_map: "CartoDB positron"
+  color_scheme: "Set3"
+  output_format: "html"
+
+# 数据路径
+paths:
+  data_raw: "data/raw"
+  data_processed: "data/processed"
+  outputs: "outputs"
+  logs: "logs"

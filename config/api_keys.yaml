@@ -1,0 +1,20 @@
+# 高德地图API
+gaode:
+  key: ""
+  secret: ""
+# 百度地图API
+baidu:
+  ak: ""
+
+# 腾讯地图API
+tencent:
+  key: ""
+
+# 微软必应地图
+bing:
+  key: ""
+
+# OpenStreetMap
+osm:
+  email: "" 
+#还未通过许可认证
